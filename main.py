@@ -7,7 +7,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import FSInputFile
 
 # 1. Bot sozlamalari
-BOT_TOKEN = "8812228075:AAHYhRLzjGiwWCFgIgZm6d-EZ-Lijj7K4n0"
+BOT_TOKEN = "8812228075:AAGLiVh8SyLii5xEMZYo-vbqfICL5orgAak"
 ADMIN_ID = 7871609676  # 👈 SHU YERGA O'ZINGIZNING TELEGRAM ID RAQAMINGIZNI YOZING!
 
 logging.basicConfig(level=logging.INFO)
