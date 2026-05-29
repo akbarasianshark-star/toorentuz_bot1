@@ -23,10 +23,18 @@ cursor = conn.cursor()
 cursor.execute("""
                CREATE TABLE IF NOT EXISTS users
                (
-                   user_id INTEGER PRIMARY KEY,
-                   username TEXT,
-                   balance INTEGER DEFAULT 0,
-                   invited_by INTEGER
+                   user_id
+                   INTEGER
+                   PRIMARY
+                   KEY,
+                   username
+                   TEXT,
+                   balance
+                   INTEGER
+                   DEFAULT
+                   0,
+                   invited_by
+                   INTEGER
                )
                """)
 conn.commit()
@@ -170,11 +178,16 @@ async def janrlar_menu(call: types.CallbackQuery):
 @dp.callback_query(lambda call: call.data == "cat_horror")
 async def cat_horror_books(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
+    builder.add(types.InlineKeyboardButton(text="Resident Evil Requirem", callback_data="download_resident_evil"))
+    builder.add(types.InlineKeyboardButton(text="Granny", callback_data="download_granny"))
     # Kelajakda horror o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
-    await call.message.edit_text("👾 **Horror (Qoʻrqinchli) janridagi eng sara o'yinlar:**\n\n⏳ Tez kunda bu yerga eng dahshatli oʻyinlar torrentlari joylanadi! Har kuni botni kuzatib boring.", reply_markup=builder.as_markup())
+    await call.message.edit_text(
+        "👾 **Horror (Qoʻrqinchli) janridagi eng sara o'yinlar:**\n\n⏳ Tez kunda bu yerga eng dahshatli oʻyinlar torrentlari joylanadi! Har kuni botni kuzatib boring.",
+        reply_markup=builder.as_markup())
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "cat_strategy")
 async def cat_strategy_books(call: types.CallbackQuery):
@@ -182,8 +195,11 @@ async def cat_strategy_books(call: types.CallbackQuery):
     # Kelajakda strategiya o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
-    await call.message.edit_text("🧠 **Strategiya janridagi eng sara o'yinlar:**\n\n⏳ Oʻz taktikangizni koʻrsating! Eng sara strategik oʻyinlar tez kunda shu yerda yuklashga tayyor bo'ladi.", reply_markup=builder.as_markup())
+    await call.message.edit_text(
+        "🧠 **Strategiya janridagi eng sara o'yinlar:**\n\n⏳ Oʻz taktikangizni koʻrsating! Eng sara strategik oʻyinlar tez kunda shu yerda yuklashga tayyor bo'ladi.",
+        reply_markup=builder.as_markup())
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "cat_action")
 async def cat_action_books(call: types.CallbackQuery):
@@ -191,7 +207,9 @@ async def cat_action_books(call: types.CallbackQuery):
     # Kelajakda action o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
-    await call.message.edit_text("🔫 **Action (Jangovar) janridagi eng sara o'yinlar:**\n\n⏳ Kuchsizlar elanadi! Haqiqiy jangovar va otishma oʻyinlari yuklash uchun hozirda tayyorlanmoqda.", reply_markup=builder.as_markup())
+    await call.message.edit_text(
+        "🔫 **Action (Jangovar) janridagi eng sara o'yinlar:**\n\n⏳ Kuchsizlar elanadi! Haqiqiy jangovar va otishma oʻyinlari yuklash uchun hozirda tayyorlanmoqda.",
+        reply_markup=builder.as_markup())
     await call.answer()
 
 
@@ -271,7 +289,7 @@ async def back_start(call: types.CallbackQuery):
     builder.add(types.InlineKeyboardButton(text="📂 O'yinlar Kategoriyasi", callback_data="janrlar"))
     builder.add(types.InlineKeyboardButton(text="🔗 Pul ishlash (Partnerka)", callback_data="partnerka"))
     builder.adjust(1)
-    
+
     # Bu yerda ham start matnini chiroyli holatda qaytaramiz
     await call.message.edit_text(
         f"🎮 **Torrent Games Bot-ga xush kelibsiz!**\n\n"
@@ -308,6 +326,7 @@ async def send_gta5(call: types.CallbackQuery):
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
 
+
 @dp.callback_query(lambda call: call.data == "download_flatout2")
 async def send_flatout2(call: types.CallbackQuery):
     await call.message.delete()
@@ -320,6 +339,7 @@ async def send_flatout2(call: types.CallbackQuery):
     except Exception:
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "download_formula1_2014")
 async def send_formula1_2014(call: types.CallbackQuery):
@@ -334,6 +354,7 @@ async def send_formula1_2014(call: types.CallbackQuery):
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
 
+
 @dp.callback_query(lambda call: call.data == "download_hard_truck2")
 async def send_hard_truck2(call: types.CallbackQuery):
     await call.message.delete()
@@ -346,6 +367,7 @@ async def send_hard_truck2(call: types.CallbackQuery):
     except Exception:
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "download_american-truck-simulator")
 async def send_americantruck(call: types.CallbackQuery):
@@ -360,6 +382,7 @@ async def send_americantruck(call: types.CallbackQuery):
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
 
+
 @dp.callback_query(lambda call: call.data == "download_half_life2")
 async def send_half_life2(call: types.CallbackQuery):
     await call.message.delete()
@@ -373,6 +396,7 @@ async def send_half_life2(call: types.CallbackQuery):
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
 
+
 @dp.callback_query(lambda call: call.data == "download_left_4_dead2")
 async def send_left_4_dead2(call: types.CallbackQuery):
     await call.message.delete()
@@ -385,6 +409,7 @@ async def send_left_4_dead2(call: types.CallbackQuery):
     except Exception:
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "download_forza")
 async def send_forza(call: types.CallbackQuery):
@@ -441,6 +466,32 @@ async def send_cs(call: types.CallbackQuery):
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
 
+@dp.callback_query(lambda call: call.data == "download_resident_evil")
+async def send_resident_evil(call: types.CallbackQuery):
+    await call.message.delete()
+    btn = InlineKeyboardBuilder().add(
+        types.InlineKeyboardButton(text="📥 Torrent faylni yuklab olish", callback_data="file_resident_evil"))
+    caption = "**Resident Evil Requirem**\n\nHajmi: 70 GB\nRAM: 12 GB 🚀\n\n👇 Yuklash uchun bosing:"
+    try:
+        await call.message.answer_photo(photo=FSInputFile("FSInputFile/resident9w.jpg"), caption=caption,
+                                        reply_markup=btn.as_markup(), parse_mode="Markdown")
+    except Exception:
+        await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
+    await call.answer()
+
+@dp.callback_query(lambda call: call.data == "download_granny")
+async def send_granny(call: types.CallbackQuery):
+    await call.message.delete()
+    btn = InlineKeyboardBuilder().add(
+        types.InlineKeyboardButton(text="📥 Torrent faylni yuklab olish", callback_data="file_granny"))
+    caption = "**Granny**\n\nHajmi: 2 GB\nRAM: 4 GB 🚀\n\n👇 Yuklash uchun bosing:"
+    try:
+        await call.message.answer_photo(photo=FSInputFile("FSInputFile/grannyw.jpg"), caption=caption,
+                                        reply_markup=btn.as_markup(), parse_mode="Markdown")
+    except Exception:
+        await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
+    await call.answer()
+
 
 # --- 12. TORRENT FAYLLARINI YUBORISH ---
 @dp.callback_query(lambda call: call.data == "file_nfs")
@@ -452,14 +503,17 @@ async def file_nfs(call: types.CallbackQuery):
         await call.message.answer("❌ NFS torrent fayli topilmadi.")
     await call.answer()
 
+
 @dp.callback_query(lambda call: call.data == "file_flatout2")
 async def file_flatout2(call: types.CallbackQuery):
     await call.message.answer("⏳ FlatOut2 torrent yuklanmoqda...")
     try:
-        await call.message.answer_document(document=FSInputFile("FSInputFile/flatout2.torrent"), caption="FlatOut2 Torrent")
+        await call.message.answer_document(document=FSInputFile("FSInputFile/flatout2.torrent"),
+                                           caption="FlatOut2 Torrent")
     except Exception:
         await call.message.answer("❌ FlatOut2 torrent fayli topilmadi.")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "file_hard_truck2")
 async def file_hard_truck2(call: types.CallbackQuery):
@@ -470,41 +524,50 @@ async def file_hard_truck2(call: types.CallbackQuery):
         await call.message.answer("❌ Hard truck 2 torrent fayli topilmadi.")
     await call.answer()
 
+
 @dp.callback_query(lambda call: call.data == "file_formula1_2014")
 async def file_formula1_2014(call: types.CallbackQuery):
     await call.message.answer("⏳ Formula 1 torrent yuklanmoqda...")
     try:
-        await call.message.answer_document(document=FSInputFile("FSInputFile/f12014.torrent"), caption="🏎 Formula 1 Torrent")
+        await call.message.answer_document(document=FSInputFile("FSInputFile/f12014.torrent"),
+                                           caption="🏎 Formula 1 Torrent")
     except Exception:
         await call.message.answer("❌ Formula 12014 torrent fayli topilmadi.")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "file_americantruck")
 async def file_americantruck(call: types.CallbackQuery):
     await call.message.answer("⏳ American Truck 2 torrent yuklanmoqda...")
     try:
-        await call.message.answer_document(document=FSInputFile("FSInputFile/Factor.torrent"), caption="American Truck Torrent")
+        await call.message.answer_document(document=FSInputFile("FSInputFile/Factor.torrent"),
+                                           caption="American Truck Torrent")
     except Exception:
         await call.message.answer("❌ American Truck 2 torrent fayli topilmadi.")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "file_half_life2")
 async def file_half_life2(call: types.CallbackQuery):
     await call.message.answer("⏳ Half LIfe 2 torrent yuklanmoqda...")
     try:
-        await call.message.answer_document(document=FSInputFile("FSInputFile/half_life2.torrent"), caption="Half Life2 Torrent")
+        await call.message.answer_document(document=FSInputFile("FSInputFile/half_life2.torrent"),
+                                           caption="Half Life2 Torrent")
     except Exception:
         await call.message.answer("❌ Half Life 2 torrent fayli topilmadi.")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "file_left_4_dead2")
 async def file_left_4_dead2(call: types.CallbackQuery):
     await call.message.answer("⏳ Left 4 Dead 2 torrent yuklanmoqda...")
     try:
-        await call.message.answer_document(document=FSInputFile("FSInputFile/ledt42.torrent"), caption="Left 4 Dead 2 Torrent")
+        await call.message.answer_document(document=FSInputFile("FSInputFile/ledt42.torrent"),
+                                           caption="Left 4 Dead 2 Torrent")
     except Exception:
         await call.message.answer("❌ Left 4 Dead 2 torrent fayli topilmadi.")
     await call.answer()
+
 
 @dp.callback_query(lambda call: call.data == "file_gta5")
 async def file_gta5(call: types.CallbackQuery):
@@ -558,6 +621,23 @@ async def file_cs(call: types.CallbackQuery):
         await call.message.answer("❌ CS 1.6 torrent fayli topilmadi.")
     await call.answer()
 
+@dp.callback_query(lambda call: call.data == "file_resident_evil")
+async def file_resident_evil(call: types.CallbackQuery):
+    await call.message.answer("⏳ Resident Evil Requirem yuklanmoqda...")
+    try:
+        await call.message.answer_document(document=FSInputFile("FSInputFile/resident-evil9.torrent"), caption="Resident Evil Requirem Torrent")
+    except Exception:
+        await call.message.answer("❌ Resident Evil Requirem torrent fayli topilmadi.")
+    await call.answer()
+
+@dp.callback_query(lambda call: call.data == "file_granny")
+async def file_granny(call: types.CallbackQuery):
+    await call.message.answer("⏳ Granny torrent yuklanmoqda...")
+    try:
+        await call.message.answer_document(document=FSInputFile("FSInputFile/granny.torrent"), caption="Granny Torrent")
+    except Exception:
+        await call.message.answer("❌ Granny torrent fayli topilmadi.")
+    await call.answer()
 
 # --- 13. REKLAMA TARQATISH VA TEZKOR QIDIRUV (MATNLARNI ILISH) ---
 @dp.message()
@@ -647,6 +727,16 @@ async def handle_all_messages(message: types.Message):
         btn = InlineKeyboardBuilder().add(
             types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_left_4_dead2"))
         await message.answer_photo(photo=FSInputFile("FSInputFile/left2w.jpg"), caption="Left 4 Dead 2 topildi!",
+                                   reply_markup=btn.as_markup())
+    elif "resident_evil" in user_text or "Resident evil requirem" in user_text:
+        btn = InlineKeyboardBuilder().add(
+            types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_resident_evil9"))
+        await message.answer_photo(photo=FSInputFile("FSInputFile/resident9w.jpg"), caption="Resident Evil Requirem topildi!",
+                                   reply_markup=btn.as_markup())
+    elif "Granny" in user_text or "granny" in user_text:
+        btn = InlineKeyboardBuilder().add(
+            types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_granny"))
+        await message.answer_photo(photo=FSInputFile("FSInputFile/grannyw.jpg"), caption="Granny topildi!",
                                    reply_markup=btn.as_markup())
     else:
         await message.reply(
