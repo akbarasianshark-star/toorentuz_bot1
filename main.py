@@ -4,11 +4,11 @@ import sqlite3
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart, Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import FSInputFile
+from aiogram.types import FSInputFile, Message
 
 # 1. Bot sozlamalari
 BOT_TOKEN = "8812228075:AAGLiVh8SyLii5xEMZYo-vbqfICL5orgAak"
-ADMIN_ID = 7871609676  # 👈 SHU YERGA O'ZINGIZNING TELEGRAM ID RAQAMINGIZNI YOZING!
+ADMIN_ID = 8812228075  # 👈 SHU YERGA O'ZINGIZNING TELEGRAM ID RAQAMINGIZNI YOZING!
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=BOT_TOKEN)
@@ -23,18 +23,10 @@ cursor = conn.cursor()
 cursor.execute("""
                CREATE TABLE IF NOT EXISTS users
                (
-                   user_id
-                   INTEGER
-                   PRIMARY
-                   KEY,
-                   username
-                   TEXT,
-                   balance
-                   INTEGER
-                   DEFAULT
-                   0,
-                   invited_by
-                   INTEGER
+                   user_id INTEGER PRIMARY KEY,
+                   username TEXT,
+                   balance INTEGER DEFAULT 0,
+                   invited_by INTEGER
                )
                """)
 conn.commit()
@@ -47,15 +39,6 @@ async def start_command(message: types.Message):
     username = message.from_user.username or "Foydalanuvchi"
 
     # Start komandasi argumentini tekshiramiz (/start r_123456)
-  @dp.message(Command("start"))
-async def start_cmd(message: Message):
-    text = (
-        "🎮 **Torrent Games Bot-ga xush kelibsiz!**\n\n"
-        "Bu yerda siz eng soʻnggi va mashhur oʻyinlarni mutloqo tekin yuklab olishingiz mumkin! 🔥\n\n"
-        "🔥 **ENG MUHIMI:** Botimiz tarkibi toʻxtovsiz yangilanadi va **har kuni 5 ta yangi oʻyinlar torrent'i qoʻshiladi!** 😎\n\n"
-        "Oʻyin olamiga shoʻngʻish uchun quyidagi menyudan foydalaning 👇"
-    )
-    await message.answer(text, parse_mode="Markdown")
     args = message.text.split()
     invited_by = None
 
@@ -92,10 +75,12 @@ async def start_cmd(message: Message):
     builder.add(types.InlineKeyboardButton(text="🔗 Pul ishlash (Partnerka)", callback_data="partnerka"))
     builder.adjust(1)
 
+    # 🌟 SIZ SO'RAGAN YANGI CHIROYLI VA JOZIBALI MATN
     await message.answer(
-        f"🕹 Assalomu alaykum, {message.from_user.full_name}!\n\n"
-        "🤖 **Torrent Games** botiga xush kelibsiz!\n"
-        "Quyidagi bo'limlardan birini tanlang yoki o'yin nomini srazu yozib yuboring:",
+        f"🎮 **Torrent Games Bot-ga xush kelibsiz!**\n\n"
+        f"Assalomu alaykum, {message.from_user.full_name}! Bu yerda siz eng soʻnggi va daxshatli kompyuter oʻyinlarini mutloqo tekin hamda yuqori tezlikda yuklab olishingiz mumkin! 🔥\n\n"
+        f"🔥 **ENG MUHIMI:** Botimiz tarkibi toʻxtovsiz yangilanadi va **har kuni 5 ta yangi oʻyinlar torrent'i qoʻshiladi!** 😎\n\n"
+        f"Quyidagi bo'limlardan birini tanlang yoki o'yin nomini srazu yozib yuboring: 👇",
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -110,11 +95,8 @@ async def admin_panel(message: types.Message):
         builder.add(types.InlineKeyboardButton(text="📢 Reklama yuborish", callback_data="admin_send_ad"))
         builder.adjust(1)
 
-        await message.answer("👑 **Xush kelibsiz, Admin!**\nBotni boshqarish uchun quyidagi tugmalardan foydalaning:",
+        await message.answer("👑 **Xush kelibsiz, Admin!**\nBotni boshqarish uchun gateway tugmalardan foydalaning:",
                              reply_markup=builder.as_markup(), parse_mode="Markdown")
-    else:
-        # Oddiy foydalanuvchilarga bu komanda haqida bildirmaymiz
-        pass
 
 
 @dp.callback_query(lambda call: call.data.startswith("admin_"))
@@ -124,7 +106,6 @@ async def admin_callbacks(call: types.CallbackQuery):
         return
 
     if call.data == "admin_stats":
-        # Bazadan jami foydalanuvchilar sonini olamiz
         cursor.execute("SELECT COUNT(*) FROM users")
         total_users = cursor.fetchone()[0]
 
@@ -166,10 +147,13 @@ async def partnerka_menu(call: types.CallbackQuery):
     await call.answer()
 
 
-# --- 6. KATEGORIYALAR (JANRLAR) OYNASI ---
+# --- 6. KATEGORIYALAR (JANRLAR) OYNASI (YANGI JANRLAR QO'SHILDI) ---
 @dp.callback_query(lambda call: call.data == "janrlar")
 async def janrlar_menu(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
+    builder.add(types.InlineKeyboardButton(text="👾 Horror (Qoʻrqinchli)", callback_data="cat_horror"))
+    builder.add(types.InlineKeyboardButton(text="🧠 Strategiya", callback_data="cat_strategy"))
+    builder.add(types.InlineKeyboardButton(text="🔫 Action (Jangovar)", callback_data="cat_action"))
     builder.add(types.InlineKeyboardButton(text="🏎 Poyga (Racing)", callback_data="cat_racing"))
     builder.add(types.InlineKeyboardButton(text="💥 Shuter (Shooter)", callback_data="cat_shooter"))
     builder.add(types.InlineKeyboardButton(text="🗺 Sarguzasht (Adventure)", callback_data="cat_adventure"))
@@ -182,7 +166,36 @@ async def janrlar_menu(call: types.CallbackQuery):
     await call.answer()
 
 
-# --- 7. KATEGORIYALAR ICHIDAGI O'YINLAR ---
+# --- 7. YANGI QO'SHILGAN KATEGORIYALAR HANDLERLARI ---
+@dp.callback_query(lambda call: call.data == "cat_horror")
+async def cat_horror_books(call: types.CallbackQuery):
+    builder = InlineKeyboardBuilder()
+    # Kelajakda horror o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
+    builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
+    builder.adjust(1)
+    await call.message.edit_text("👾 **Horror (Qoʻrqinchli) janridagi eng sara o'yinlar:**\n\n⏳ Tez kunda bu yerga eng dahshatli oʻyinlar torrentlari joylanadi! Har kuni botni kuzatib boring.", reply_markup=builder.as_markup())
+    await call.answer()
+
+@dp.callback_query(lambda call: call.data == "cat_strategy")
+async def cat_strategy_books(call: types.CallbackQuery):
+    builder = InlineKeyboardBuilder()
+    # Kelajakda strategiya o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
+    builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
+    builder.adjust(1)
+    await call.message.edit_text("🧠 **Strategiya janridagi eng sara o'yinlar:**\n\n⏳ Oʻz taktikangizni koʻrsating! Eng sara strategik oʻyinlar tez kunda shu yerda yuklashga tayyor bo'ladi.", reply_markup=builder.as_markup())
+    await call.answer()
+
+@dp.callback_query(lambda call: call.data == "cat_action")
+async def cat_action_books(call: types.CallbackQuery):
+    builder = InlineKeyboardBuilder()
+    # Kelajakda action o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
+    builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
+    builder.adjust(1)
+    await call.message.edit_text("🔫 **Action (Jangovar) janridagi eng sara o'yinlar:**\n\n⏳ Kuchsizlar elanadi! Haqiqiy jangovar va otishma oʻyinlari yuklash uchun hozirda tayyorlanmoqda.", reply_markup=builder.as_markup())
+    await call.answer()
+
+
+# --- 8. ESKI MAVJUD KATEGORIYALAR ICHIDAGI O'YINLAR ---
 @dp.callback_query(lambda call: call.data == "cat_racing")
 async def cat_racing_books(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
@@ -233,7 +246,7 @@ async def open_world_info(call: types.CallbackQuery):
     await call.answer()
 
 
-# --- 8. TOP O'YINLAR RO'YXATI ---
+# --- 9. TOP O'YINLAR RO'YXATI ---
 @dp.callback_query(lambda call: call.data == "top_oyinlar")
 async def top_oyinlar_info(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
@@ -250,7 +263,7 @@ async def top_oyinlar_info(call: types.CallbackQuery):
     await call.answer()
 
 
-# --- 9. ORTGA QAYTISH FUNKSIYASI ---
+# --- 10. ORTGA QAYTISH FUNKSIYASI ---
 @dp.callback_query(lambda call: call.data == "back_to_start")
 async def back_start(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
@@ -258,13 +271,16 @@ async def back_start(call: types.CallbackQuery):
     builder.add(types.InlineKeyboardButton(text="📂 O'yinlar Kategoriyasi", callback_data="janrlar"))
     builder.add(types.InlineKeyboardButton(text="🔗 Pul ishlash (Partnerka)", callback_data="partnerka"))
     builder.adjust(1)
+    
+    # Bu yerda ham start matnini chiroyli holatda qaytaramiz
     await call.message.edit_text(
-        f"🕹 Assalomu alaykum, {call.from_user.full_name}!\n\n🤖 **Torrent Games** botiga xush kelibsiz!\nQuyidagi bo'limlardan birini tanlang:",
+        f"🎮 **Torrent Games Bot-ga xush kelibsiz!**\n\n"
+        f"🤖 Bo'limlardan birini tanlang yoki o'yin nomini yozing. Eslatib o'tamiz, botimizga **har kuni 5 ta yangi o'yin torrent'i qo'shiladi!** ⚡️",
         reply_markup=builder.as_markup(), parse_mode="Markdown")
     await call.answer()
 
 
-# --- 10. RASMLI MA'LUMOT OYNALARI ---
+# --- 11. RASMLI MA'LUMOT OYNALARI ---
 @dp.callback_query(lambda call: call.data == "download_nfs")
 async def send_nfs(call: types.CallbackQuery):
     await call.message.delete()
@@ -426,7 +442,7 @@ async def send_cs(call: types.CallbackQuery):
     await call.answer()
 
 
-# --- 11. TORRENT FAYLLARINI YUBORISH ---
+# --- 12. TORRENT FAYLLARINI YUBORISH ---
 @dp.callback_query(lambda call: call.data == "file_nfs")
 async def file_nfs(call: types.CallbackQuery):
     await call.message.answer("⏳ NFS torrent yuklanmoqda...")
@@ -447,7 +463,7 @@ async def file_flatout2(call: types.CallbackQuery):
 
 @dp.callback_query(lambda call: call.data == "file_hard_truck2")
 async def file_hard_truck2(call: types.CallbackQuery):
-    await call.message.answer("⏳ Hard Truck2  torrent yuklanmoqda...")
+    await call.message.answer("⏳ Hard Truck2 torrent yuklanmoqda...")
     try:
         await call.message.answer_document(document=FSInputFile("FSInputFile/hard_truck2.torrent"), caption=" Torrent")
     except Exception:
@@ -543,7 +559,7 @@ async def file_cs(call: types.CallbackQuery):
     await call.answer()
 
 
-# --- 12. REKLAMA TARQATISH VA TEZKOR QIDIRUV (MATNLARNI ILISH) ---
+# --- 13. REKLAMA TARQATISH VA TEZKOR QIDIRUV (MATNLARNI ILISH) ---
 @dp.message()
 async def handle_all_messages(message: types.Message):
     user_id = message.from_user.id
@@ -551,12 +567,9 @@ async def handle_all_messages(message: types.Message):
 
     # ADMIN REKLAMA TARQATAYOTGAN BO'LSA
     if user_id == ADMIN_ID and admin_state.get(user_id) == "waiting_for_ad":
-        # Holatni srazu tozalaymiz
         admin_state.pop(user_id, None)
-
         await message.answer("⏳ Reklama barcha foydalanuvchilarga tarqatilmoqda, kuting...")
 
-        # Bazadan hamma foydalanuvchilarni ID raqamini olamiz
         cursor.execute("SELECT user_id FROM users")
         all_users = cursor.fetchall()
 
@@ -566,10 +579,9 @@ async def handle_all_messages(message: types.Message):
         for u in all_users:
             target_id = u[0]
             try:
-                # Xabarni barchaga aynan qanday formatda bo'lsa shunday nusxalab yuboramiz (Rasm, matn, video farqi yo'q)
                 await message.copy_to(chat_id=target_id)
                 success += 1
-                await asyncio.sleep(0.05)  # Telegram bloklab qo'ymasligi uchun kichik pauza
+                await asyncio.sleep(0.05)
             except Exception:
                 failed += 1
 
@@ -606,7 +618,7 @@ async def handle_all_messages(message: types.Message):
             types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_gta5"))
         await message.answer_photo(photo=FSInputFile("FSInputFile/gta5w.jpg"), caption="🏙 GTA 5 topildi!",
                                    reply_markup=btn.as_markup())
-    elif "hard_truck2" in user_text or "hard_truck2" in user_text:
+    elif "hard_truck2" in user_text or "hard_truck" in user_text:
         btn = InlineKeyboardBuilder().add(
             types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_hard_truck2"))
         await message.answer_photo(photo=FSInputFile("FSInputFile/hardw.jpg"), caption="Hard Truck 2 topildi!",
@@ -631,7 +643,7 @@ async def handle_all_messages(message: types.Message):
             types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_half_life2"))
         await message.answer_photo(photo=FSInputFile("FSInputFile/halfw.jpg"), caption="Half Life 2 topildi!",
                                    reply_markup=btn.as_markup())
-    elif "left_4_dead2" in user_text or "left_4_dead2" in user_text:
+    elif "left_4_dead2" in user_text or "left_4_dead" in user_text:
         btn = InlineKeyboardBuilder().add(
             types.InlineKeyboardButton(text="📥 Torrent yuklash", callback_data="file_left_4_dead2"))
         await message.answer_photo(photo=FSInputFile("FSInputFile/left2w.jpg"), caption="Left 4 Dead 2 topildi!",
@@ -641,7 +653,7 @@ async def handle_all_messages(message: types.Message):
             f"🔍 '{message.text}' bo'yicha hech narsa topilmadi.\nSinab ko'ring: NFS, CS, Minecraft, Forza, Most Wanted, GTA5")
 
 
-# --- 13. BOTNI ISHGA TUSHIRISH ---
+# --- 14. BOTNI ISHGA TUSHIRISH ---
 async def main():
     print("Baza, Partnerka va Admin Panelli professional bot ishga tushdi...")
     await dp.start_polling(bot)
