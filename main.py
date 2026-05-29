@@ -8,7 +8,7 @@ from aiogram.types import FSInputFile, Message
 
 # 1. Bot sozlamalari
 BOT_TOKEN = "8812228075:AAGLiVh8SyLii5xEMZYo-vbqfICL5orgAak"
-ADMIN_ID = 8812228075  # 👈 SHU YERGA O'ZINGIZNING TELEGRAM ID RAQAMINGIZNI YOZING!
+ADMIN_ID = 7871609676  # 👈 SHU YERGA O'ZINGIZNING TELEGRAM ID RAQAMINGIZNI YOZING!
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=BOT_TOKEN)
