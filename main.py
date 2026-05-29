@@ -47,6 +47,15 @@ async def start_command(message: types.Message):
     username = message.from_user.username or "Foydalanuvchi"
 
     # Start komandasi argumentini tekshiramiz (/start r_123456)
+  @dp.message(Command("start"))
+async def start_cmd(message: Message):
+    text = (
+        "🎮 **Torrent Games Bot-ga xush kelibsiz!**\n\n"
+        "Bu yerda siz eng soʻnggi va mashhur oʻyinlarni mutloqo tekin yuklab olishingiz mumkin! 🔥\n\n"
+        "🔥 **ENG MUHIMI:** Botimiz tarkibi toʻxtovsiz yangilanadi va **har kuni 5 ta yangi oʻyinlar torrent'i qoʻshiladi!** 😎\n\n"
+        "Oʻyin olamiga shoʻngʻish uchun quyidagi menyudan foydalaning 👇"
+    )
+    await message.answer(text, parse_mode="Markdown")
     args = message.text.split()
     invited_by = None
 
