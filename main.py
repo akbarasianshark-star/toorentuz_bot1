@@ -180,6 +180,7 @@ async def cat_horror_books(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(text="Resident Evil Requirem", callback_data="download_resident_evil"))
     builder.add(types.InlineKeyboardButton(text="Granny", callback_data="download_granny"))
+   builder.add(types.InlineKeyboardButton(text="Metro", callback_data="download_metro"))
     # Kelajakda horror o'yinlar qo'shsangiz tugmalarini shu yerga yozasiz
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
@@ -225,6 +226,7 @@ async def cat_racing_books(call: types.CallbackQuery):
     builder.add(types.InlineKeyboardButton(text="🏎 Hard_truck2", callback_data="download_hard_truck2"))
     builder.add(types.InlineKeyboardButton(text="🏎 American_Truck", callback_data="download_american-truck-simulator"))
     builder.add(types.InlineKeyboardButton(text="🏎 Forza Horizon 5", callback_data="download_forza"))
+    builder.add(types.InlineKeyboardButton(text="🏎 Forza Horizon 6", callback_data="download_forza6"))
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
     await call.message.edit_text("🏎 **Poyga janridagi eng sara o'yinlar:**", reply_markup=builder.as_markup())
@@ -237,6 +239,9 @@ async def cat_shooter_books(call: types.CallbackQuery):
     builder.add(types.InlineKeyboardButton(text="💥 Counter-Strike 1.6", callback_data="download_cs"))
     builder.add(types.InlineKeyboardButton(text="💥 Half_life_2", callback_data="download_half_life2"))
     builder.add(types.InlineKeyboardButton(text="💥 Left_4_dead2", callback_data="download_left_4_dead2"))
+   builder.add(types.InlineKeyboardButton(text="💥 Metro", callback_data="download_metro"))
+  
+  
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
     await call.message.edit_text("💥 **Shuter janridagi eng sara o'yinlar:**", reply_markup=builder.as_markup())
@@ -257,7 +262,16 @@ async def cat_adventure_books(call: types.CallbackQuery):
 async def open_world_info(call: types.CallbackQuery):
     builder = InlineKeyboardBuilder()
     builder.add(types.InlineKeyboardButton(text="🏎 Forza Horizon 5", callback_data="download_forza"))
+  builder.add(types.InlineKeyboardButton(text=" 🏎 Forza Horizon 6", callback_data="download_forza6"))
     builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto 5", callback_data="download_gta5"))
+  builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto 4", callback_data="download_gta4"))
+builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto Vice City remake", callback_data="download_gta_vice_cityremake"))
+builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto Vice City", callback_data="download_gta_vice_city"))
+builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto San Andreas Remake", callback_data="download_gta_san_andreasremake"))
+builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto San Andreas", callback_data="download_gta_san_andreas"))
+builder.add(types.InlineKeyboardButton(text="🏙 Grand Theft Auto 3 Remake", callback_data="download_gta3remake"))
+builder.add(types.InlineKeyboardButton(text="🏙 Red Dead Redemption Remake", callback_data="download_reddead_remake"))
+builder.add(types.InlineKeyboardButton(text="🏙 Red Dead Redemption 2", callback_data="download_reddead2"))
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
     await call.message.edit_text("🌍 **Ochiq dunyo (Open World) janridagi o'yinlar:**", reply_markup=builder.as_markup(),
@@ -492,7 +506,42 @@ async def send_granny(call: types.CallbackQuery):
     except Exception:
         await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
     await call.answer()
-
+@dp.callback_query(lambda call: call.data == "download_gta4")
+async def send_gta4(call: types.CallbackQuery):
+    await call.message.delete()
+    btn = InlineKeyboardBuilder().add(
+        types.InlineKeyboardButton(text="📥 Torrent faylni yuklab olish", callback_data="file_gta4"))
+    caption = "**Gta 4**\n\nHajmi: 18 GB\nRAM: 6 GB 🚀\n\n👇 Yuklash uchun bosing:"
+    try:
+        await call.message.answer_photo(photo=FSInputFile("FSInputFile/gta4w.jpg"), caption=caption,
+                                        reply_markup=btn.as_markup(), parse_mode="Markdown")
+    except Exception:
+        await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
+    await call.answer()
+@dp.callback_query(lambda call: call.data == "download_gta_vice_city_remake")
+async def send_gta_vice_city_remake(call: types.CallbackQuery):
+    await call.message.delete()
+    btn = InlineKeyboardBuilder().add(
+        types.InlineKeyboardButton(text="📥 Torrent faylni yuklab olish", callback_data="file_gta_vice_city_remake"))
+    caption = "**Granny**\n\nHajmi: 7 GB\nRAM: 4 GB 🚀\n\n👇 Yuklash uchun bosing:"
+    try:
+        await call.message.answer_photo(photo=FSInputFile("FSInputFile/vicecity2w.jpg"), caption=caption,
+                                        reply_markup=btn.as_markup(), parse_mode="Markdown")
+    except Exception:
+        await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
+    await call.answer()
+@dp.callback_query(lambda call: call.data == "download_gta_vice_city")
+async def send_gta_vice_city(call: types.CallbackQuery):
+    await call.message.delete()
+    btn = InlineKeyboardBuilder().add(
+        types.InlineKeyboardButton(text="📥 Torrent faylni yuklab olish", callback_data="file_gta_vice_city"))
+    caption = "**Granny**\n\nHajmi: 2 GB\nRAM: 4 GB 🚀\n\n👇 Yuklash uchun bosing:"
+    try:
+        await call.message.answer_photo(photo=FSInputFile("FSInputFile/vicecityw.jpg"), caption=caption,
+                                        reply_markup=btn.as_markup(), parse_mode="Markdown")
+    except Exception:
+        await call.message.answer(caption, reply_markup=btn.as_markup(), parse_mode="Markdown")
+    await call.answer()  
 
 # --- 12. TORRENT FAYLLARINI YUBORISH ---
 @dp.callback_query(lambda call: call.data == "file_nfs")
