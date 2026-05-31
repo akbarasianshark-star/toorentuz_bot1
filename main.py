@@ -224,6 +224,7 @@ async def cat_racing_books(call: types.CallbackQuery):
     builder.add(types.InlineKeyboardButton(text="🏎 f12014", callback_data="download_formula1_2014"))
     builder.add(types.InlineKeyboardButton(text="🏎 Hard_truck2", callback_data="download_hard_truck2"))
     builder.add(types.InlineKeyboardButton(text="🏎 American_Truck", callback_data="download_american-truck-simulator"))
+    builder.add(types.InlineKeyboardButton(text="🏎 Forza Horizon 5", callback_data="download_forza"))
     builder.add(types.InlineKeyboardButton(text="⬅️ Janrlarga qaytish", callback_data="janrlar"))
     builder.adjust(1)
     await call.message.edit_text("🏎 **Poyga janridagi eng sara o'yinlar:**", reply_markup=builder.as_markup())
